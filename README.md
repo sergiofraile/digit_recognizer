@@ -2,6 +2,10 @@
 
 Machine Learning project for the [Digit Recognizer competition in Kaggle](https://www.kaggle.com/c/digit-recognizer).
 
+This project doesn't use the full MNIST dataset, only the part provided by the Kaggle competition.
+
+The algorithm current accuracy for the competition is 0.99314.
+
 ## Installation
 
 Requirements.txt contains the packages to install with pip. I have only tested it on Python 3, no guarantees it will work for Python 2.
