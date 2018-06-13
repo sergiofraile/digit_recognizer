@@ -4,7 +4,7 @@ Machine Learning project for the [Digit Recognizer competition in Kaggle](https:
 
 This project doesn't use the full MNIST dataset, only the part provided by the Kaggle competition.
 
-The algorithm current accuracy for the competition is 0.99314.
+The algorithm current accuracy for the competition is 0.99342.
 
 ## Installation
 

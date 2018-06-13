@@ -8,11 +8,14 @@ num_classes = 10
 epochs = 20
 train_test_ratio = 0.8
 
+
 # input image dimensions
 img_rows, img_cols = 28, 28
 
+
 # Load and preparing the train and test data
 x_train, y_train, x_test, y_test = prepare_data(num_classes, train_test_ratio)
+
 
 # Creating the model
 model = Sequential()
@@ -44,10 +47,24 @@ model.compile(optimizer='adadelta',
               loss='categorical_crossentropy',
               metrics=['accuracy'])
 
-fit_model(model, x_train, y_train, x_test, y_test, batch_size, epochs)
 
-score = model.evaluate(x_test, y_test)
-print('Test accuracy: ', score[1])
+# Data augmentation
+
+gen = ImageDataGenerator(rotation_range=8,
+                         width_shift_range=0.08,
+                         shear_range=0.3,
+                         height_shift_range=0.08,
+                         zoom_range=0.08)
+
+test_gen = ImageDataGenerator()
+
+train_generator = gen.flow(x_train, y_train, batch_size=batch_size)
+test_generator = test_gen.flow(x_test, y_test, batch_size=batch_size)
+
+
+# Fitting the model
+# fit_model(model, x_train, y_train, x_test, y_test, batch_size, epochs)
+fit_model_with_geneartor(model, x_train, y_train, x_test, y_test, batch_size, epochs)
 
 # Predict the test results
 results = predict_results(model)
