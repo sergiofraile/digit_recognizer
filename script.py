@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from tensorflow import keras
+import keras
 from keras.models import Sequential
 from keras.layers import Dense, Conv2D, MaxPooling2D, Dropout, Flatten, BatchNormalization
 from keras.preprocessing.image import ImageDataGenerator
@@ -70,6 +70,7 @@ def fit_model(m, kx_train, ky_train, kx_test, ky_test, batch_size=128, max_epoch
 
 
 def fit_model_with_geneartor(m, x_train, y_train, x_test, y_test, batch_size=128, max_epochs=1000):
+
     early_stopping = keras.callbacks.EarlyStopping(monitor='val_acc',
                                                    min_delta=0.01,
                                                    patience=10,
@@ -115,11 +116,14 @@ num_classes = 10
 epochs = 20
 train_test_ratio = 0.8
 
+
 # input image dimensions
 img_rows, img_cols = 28, 28
 
+
 # Load and preparing the train and test data
 x_train, y_train, x_test, y_test = prepare_data(num_classes, train_test_ratio)
+
 
 # Creating the model
 model = Sequential()
@@ -151,11 +155,24 @@ model.compile(optimizer='adadelta',
               loss='categorical_crossentropy',
               metrics=['accuracy'])
 
+
+# Data augmentation
+
+gen = ImageDataGenerator(rotation_range=8,
+                         width_shift_range=0.08,
+                         shear_range=0.3,
+                         height_shift_range=0.08,
+                         zoom_range=0.08)
+
+test_gen = ImageDataGenerator()
+
+train_generator = gen.flow(x_train, y_train, batch_size=batch_size)
+test_generator = test_gen.flow(x_test, y_test, batch_size=batch_size)
+
+
+# Fitting the model
 # fit_model(model, x_train, y_train, x_test, y_test, batch_size, epochs)
 fit_model_with_geneartor(model, x_train, y_train, x_test, y_test, batch_size, epochs)
-
-score = model.evaluate(x_test, y_test)
-print('Test accuracy: ', score[1])
 
 # Predict the test results
 results = predict_results(model)
